@@ -1,0 +1,16 @@
+*{
+	padding: 0px;
+	margin: 0px;
+}
+#demo,.demo,.demo1{
+	height: 200px;
+	width: 200px;
+	overflow: hidden;
+	float: left;
+	margin: 10px;
+	border: 1px solid red;
+}
+.content p{
+	height: 18px;font-size: 18px;
+	line-height: 18px;
+ }
