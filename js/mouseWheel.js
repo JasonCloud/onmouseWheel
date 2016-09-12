@@ -1,3 +1,7 @@
+/*
+  创建于：2016-09-12
+  作者：JasonCloud
+*/
  var mouseWheel = (function(w){
         /*工具类*/
         Tool = {
