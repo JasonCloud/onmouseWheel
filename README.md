@@ -1,7 +1,7 @@
 # onmouseWheel
 //自定义滚动;
 //使用方法
-//在页面引入mouseWheel.js
+//在页面引入mouseWheel.js<br>
 var gund = new mouseWheel("demo",{
   color:['pink','green'], //设置滚动条的颜色
   speed:1,                //以及滚动的速度
