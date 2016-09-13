@@ -28,13 +28,23 @@
 
      function addEvent(element,type,fn,data,_this){
           _this = _this ? _this : element;
+          var bindfn = bindFunction(_this,fn,data)
           if(element.addEventListener){
-            element.addEventListener(type,bindFunction(_this,fn,data),false);
+            element.addEventListener(type,bindfn,false);
           }else if(element.attachEvent){
-            element.attachEvent('on'+type,fn);
+            element.attachEvent('on'+type,bindfn);
           }else{
-            element['on'+type] = fn;
+            element['on'+type] = bindfn;
           }
+          return function(){
+               if(element.removeEventListener){
+                  element.removeEventListener(type,bindfn,false);
+                }else if(element.attachEvent){
+                  element.detachEvent('on'+type,bindfn);
+                }else{
+                 element['on'+type] = null;
+                }
+                }
         }
       function removeEvent(element,type,fn){
           if(element.removeEventListener){
@@ -216,7 +226,7 @@
             var timer = setTimeout(function(){
                move(data.elementspan,data.elementchild,data.start,end,false,data,data.speed);
                data.zt = true;
-            },500);
+            },100);
             data.timer = timer;
             data.end = end;
             data.start = top;
@@ -265,14 +275,16 @@
             var parentNode = _this.parentNode.parentNode;
             var chaz = ev.clientY-parentNode.offsetTop-_this.offsetTop;
             var chz_x = _this.offsetHeight-chaz;
-            Tool.Event.addEvent(parentNode,'mousemove',mousemovefn,{'chaz':chaz,'chz_x':chz_x,'spanthis':_this,'H':data.H,'h':data.h,"bfb":data.bfb});
-            Tool.Event.addEvent(document,'mouseup',mouseupfn,{'parentdiv':parentNode});
+            var movegun = Tool.Event.addEvent(parentNode,'mousemove',mousemovefn,{'chaz':chaz,'chz_x':chz_x,'spanthis':_this,'H':data.H,'h':data.h,"bfb":data.bfb});
+            Tool.Event.addEvent(document,'mouseup',mouseupfn,{'parentdiv':parentNode,fn:movegun});
        }
+   
        function mouseupfn(e,data){
         Tool.Event.removeEvent(this,'mouseup',mouseupfn);
-        Tool.Event.removeEvent(data.parentdiv,'mousemove',mousemovefn);
+        data.fn();
        }
       function mousemovefn(e,data){
+        Tool.Event.stopPropagation(e);
          var ev = Tool.Event.eventObj(e)[0];
          var _this = this;
          var topH = data.spanthis.offsetTop;
